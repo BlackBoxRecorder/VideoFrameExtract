@@ -61,6 +61,12 @@ namespace VideoFrameExtract
                 return;
             }
 
+            if (Directory.GetFiles(imgDir).Length > 0)
+            {
+                MessageBox.Show("您选择的图片目录不为空");
+                return;
+            }
+
             var imgFormat = CmbImageFormat.Text.ToLower();
 
             var success = int.TryParse(TextTotalFrame.Text, out var totalFrame);
@@ -92,7 +98,11 @@ namespace VideoFrameExtract
             {
                 opened = cap.Open(camIndex);
             }
-            else if (videoSrc.ToLower().Contains("rtsp") || videoSrc.ToLower().Contains("rtmp"))
+            else if (
+                videoSrc.ToLower().Contains("rtsp://")
+                || videoSrc.ToLower().Contains("rtmp://")
+                || videoSrc.ToLower().Contains("http://")
+            )
             {
                 //网络流
                 opened = cap.Open(videoSrc);
@@ -112,7 +122,7 @@ namespace VideoFrameExtract
 
             if (!opened)
             {
-                MessageBox.Show("视频文件打开失败");
+                MessageBox.Show("视频源打开失败");
                 BtnExtract.Enabled = true;
                 return;
             }
@@ -124,21 +134,22 @@ namespace VideoFrameExtract
             }
 
             int index = 0;
+            int extractCount = 0;
             var sw = new Stopwatch();
             sw.Start();
 
             while (!stopToken.IsCancellationRequested)
             {
                 await Task.Delay(1);
-                if (sw.ElapsedMilliseconds / 1000 > stopTime * 60)
+                if (CkbStopAfterMinute.Checked && sw.ElapsedMilliseconds / 1000 > stopTime * 60)
                 {
                     break;
                 }
 
                 if (!cap.IsOpened())
                 {
-                    MessageBox.Show("视频文件已关闭");
-                    return;
+                    MessageBox.Show("视频源已关闭");
+                    break;
                 }
 
                 var frame = new Mat();
@@ -146,25 +157,30 @@ namespace VideoFrameExtract
 
                 if (!readSuccess)
                 {
-                    MessageBox.Show("结束");
-                    return;
+                    MessageBox.Show("视频源已关闭");
+                    break;
                 }
 
-                var imgfile = Path.Combine(imgDir, $"{index}.{imgFormat}");
+                var imgfile = Path.Combine(imgDir, $"{extractCount}.{imgFormat}");
 
-                if (CkbSkipFrame.Checked && index % skipFrame == 0)
+                if (CkbSkipFrame.Checked)
                 {
-                    Cv2.ImWrite(imgfile, frame);
+                    if (index % skipFrame == 0)
+                    {
+                        extractCount++;
+                        Cv2.ImWrite(imgfile, frame);
+                        TextFrameCount.Text = $"已提取：{extractCount} 帧";
+                    }
                 }
                 else
                 {
                     Cv2.ImWrite(imgfile, frame);
+                    extractCount++;
+                    TextFrameCount.Text = $"已提取：{extractCount} 帧";
                 }
-
                 index++;
-                TextFrameCount.Text = $"已提取：{index} 帧";
 
-                if (CkbTotalFrame.Checked && index > totalFrame)
+                if (CkbTotalFrame.Checked && extractCount >= totalFrame)
                 {
                     break;
                 }

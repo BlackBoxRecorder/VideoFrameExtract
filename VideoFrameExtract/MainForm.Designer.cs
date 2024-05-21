@@ -107,6 +107,7 @@
             // 
             // CmbImageFormat
             // 
+            this.CmbImageFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.CmbImageFormat.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.CmbImageFormat.FormattingEnabled = true;
             this.CmbImageFormat.Location = new System.Drawing.Point(337, 108);

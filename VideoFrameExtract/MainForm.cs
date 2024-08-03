@@ -36,7 +36,7 @@ namespace VideoFrameExtract
         {
             TextTotalFrame.Enabled = false;
             TextSkipFrame.Enabled = false;
-            TextStopAfterMinute.Enabled = false;
+            TextStopAfterSecond.Enabled = false;
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -83,10 +83,10 @@ namespace VideoFrameExtract
                 return;
             }
 
-            success = double.TryParse(TextStopAfterMinute.Text, out var stopTime);
-            if (!success && CkbStopAfterMinute.Checked)
+            success = int.TryParse(TextStopAfterSecond.Text, out var stopTime);
+            if (!success && CkbStopAfterSecond.Checked)
             {
-                MessageBox.Show("分钟数填写错误，可以填整数和小数");
+                MessageBox.Show("秒数填写错误，请填写整数");
                 return;
             }
 
@@ -141,7 +141,7 @@ namespace VideoFrameExtract
             while (!stopToken.IsCancellationRequested)
             {
                 await Task.Delay(1);
-                if (CkbStopAfterMinute.Checked && sw.ElapsedMilliseconds / 1000 > stopTime * 60)
+                if (CkbStopAfterSecond.Checked && sw.ElapsedMilliseconds / 1000 > stopTime)
                 {
                     break;
                 }
@@ -221,14 +221,14 @@ namespace VideoFrameExtract
 
         private void CkbStopAfterMinute_CheckedChanged(object sender, EventArgs e)
         {
-            if (CkbStopAfterMinute.Checked)
+            if (CkbStopAfterSecond.Checked)
             {
-                TextStopAfterMinute.Enabled = true;
+                TextStopAfterSecond.Enabled = true;
             }
             else
             {
-                TextStopAfterMinute.Text = string.Empty;
-                TextStopAfterMinute.Enabled = false;
+                TextStopAfterSecond.Text = string.Empty;
+                TextStopAfterSecond.Enabled = false;
             }
         }
 

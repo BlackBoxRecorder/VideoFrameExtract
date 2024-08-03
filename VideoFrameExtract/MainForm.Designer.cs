@@ -46,8 +46,8 @@
             this.CkbSkipFrame = new System.Windows.Forms.CheckBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.TextStopAfterMinute = new System.Windows.Forms.TextBox();
-            this.CkbStopAfterMinute = new System.Windows.Forms.CheckBox();
+            this.TextStopAfterSecond = new System.Windows.Forms.TextBox();
+            this.CkbStopAfterSecond = new System.Windows.Forms.CheckBox();
             this.BtnExtract = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -211,27 +211,27 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(149, 200);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(65, 12);
+            this.label9.Size = new System.Drawing.Size(53, 12);
             this.label9.TabIndex = 0;
-            this.label9.Text = "分钟后停止";
+            this.label9.Text = "秒后停止";
             // 
-            // TextStopAfterMinute
+            // TextStopAfterSecond
             // 
-            this.TextStopAfterMinute.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.TextStopAfterMinute.Location = new System.Drawing.Point(90, 193);
-            this.TextStopAfterMinute.Name = "TextStopAfterMinute";
-            this.TextStopAfterMinute.Size = new System.Drawing.Size(55, 26);
-            this.TextStopAfterMinute.TabIndex = 1;
+            this.TextStopAfterSecond.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.TextStopAfterSecond.Location = new System.Drawing.Point(90, 193);
+            this.TextStopAfterSecond.Name = "TextStopAfterSecond";
+            this.TextStopAfterSecond.Size = new System.Drawing.Size(55, 26);
+            this.TextStopAfterSecond.TabIndex = 1;
             // 
-            // CkbStopAfterMinute
+            // CkbStopAfterSecond
             // 
-            this.CkbStopAfterMinute.AutoSize = true;
-            this.CkbStopAfterMinute.Location = new System.Drawing.Point(30, 200);
-            this.CkbStopAfterMinute.Name = "CkbStopAfterMinute";
-            this.CkbStopAfterMinute.Size = new System.Drawing.Size(15, 14);
-            this.CkbStopAfterMinute.TabIndex = 5;
-            this.CkbStopAfterMinute.UseVisualStyleBackColor = true;
-            this.CkbStopAfterMinute.CheckedChanged += new System.EventHandler(this.CkbStopAfterMinute_CheckedChanged);
+            this.CkbStopAfterSecond.AutoSize = true;
+            this.CkbStopAfterSecond.Location = new System.Drawing.Point(30, 200);
+            this.CkbStopAfterSecond.Name = "CkbStopAfterSecond";
+            this.CkbStopAfterSecond.Size = new System.Drawing.Size(15, 14);
+            this.CkbStopAfterSecond.TabIndex = 5;
+            this.CkbStopAfterSecond.UseVisualStyleBackColor = true;
+            this.CkbStopAfterSecond.CheckedChanged += new System.EventHandler(this.CkbStopAfterMinute_CheckedChanged);
             // 
             // BtnExtract
             // 
@@ -249,14 +249,14 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(489, 252);
-            this.Controls.Add(this.CkbStopAfterMinute);
+            this.Controls.Add(this.CkbStopAfterSecond);
             this.Controls.Add(this.CkbSkipFrame);
             this.Controls.Add(this.CkbTotalFrame);
             this.Controls.Add(this.TextFrameCount);
             this.Controls.Add(this.CmbImageFormat);
             this.Controls.Add(this.BtnExtract);
             this.Controls.Add(this.BtnCancel);
-            this.Controls.Add(this.TextStopAfterMinute);
+            this.Controls.Add(this.TextStopAfterSecond);
             this.Controls.Add(this.TextSkipFrame);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.TextTotalFrame);
@@ -302,8 +302,8 @@
         private System.Windows.Forms.CheckBox CkbSkipFrame;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox TextStopAfterMinute;
-        private System.Windows.Forms.CheckBox CkbStopAfterMinute;
+        private System.Windows.Forms.TextBox TextStopAfterSecond;
+        private System.Windows.Forms.CheckBox CkbStopAfterSecond;
         private System.Windows.Forms.Button BtnExtract;
     }
 }

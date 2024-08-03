@@ -37,6 +37,7 @@ namespace VideoFrameExtract
             TextTotalFrame.Enabled = false;
             TextSkipFrame.Enabled = false;
             TextStopAfterSecond.Enabled = false;
+            TextStartAtSecond.Enabled = false;
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -69,7 +70,7 @@ namespace VideoFrameExtract
 
             var imgFormat = CmbImageFormat.Text.ToLower();
 
-            var success = int.TryParse(TextTotalFrame.Text, out var totalFrame);
+            var success = int.TryParse(TextTotalFrame.Text, out var totalFrameToExtrace);
             if (!success && CkbTotalFrame.Checked)
             {
                 MessageBox.Show("总抽取帧数填写错误");
@@ -86,7 +87,14 @@ namespace VideoFrameExtract
             success = int.TryParse(TextStopAfterSecond.Text, out var stopTime);
             if (!success && CkbStopAfterSecond.Checked)
             {
-                MessageBox.Show("秒数填写错误，请填写整数");
+                MessageBox.Show("执行秒数填写错误，请填写整数");
+                return;
+            }
+
+            success = int.TryParse(TextStartAtSecond.Text, out var startSecond);
+            if (!success && CkbStartAtSecond.Checked)
+            {
+                MessageBox.Show("开始秒数填写错误，请填写整数");
                 return;
             }
 
@@ -133,18 +141,14 @@ namespace VideoFrameExtract
                 stopToken = cts.Token;
             }
 
-            int index = 0;
-            int extractCount = 0;
+            var fps = cap.Fps;
+            int frameIndex = 0;
+            int extractedCount = 0;
             var sw = new Stopwatch();
-            sw.Start();
 
             while (!stopToken.IsCancellationRequested)
             {
                 await Task.Delay(1);
-                if (CkbStopAfterSecond.Checked && sw.ElapsedMilliseconds / 1000 > stopTime)
-                {
-                    break;
-                }
 
                 if (!cap.IsOpened())
                 {
@@ -157,30 +161,46 @@ namespace VideoFrameExtract
 
                 if (!readSuccess)
                 {
-                    MessageBox.Show("视频源已关闭");
+                    MessageBox.Show("读取帧失败，视频源已关闭");
                     break;
                 }
 
-                var imgfile = Path.Combine(imgDir, $"{extractCount}.{imgFormat}");
+                frameIndex++;
+
+                if (frameIndex < startSecond * fps)
+                {
+                    continue;
+                }
+
+                if (!sw.IsRunning)
+                {
+                    sw.Start();
+                }
+
+                if (CkbStopAfterSecond.Checked && sw.ElapsedMilliseconds > stopTime * 1000)
+                {
+                    break;
+                }
+
+                var imgfile = Path.Combine(imgDir, $"{extractedCount}.{imgFormat}");
 
                 if (CkbSkipFrame.Checked)
                 {
-                    if (index % skipFrame == 0)
+                    if (frameIndex % skipFrame == 0)
                     {
-                        extractCount++;
+                        extractedCount++;
                         Cv2.ImWrite(imgfile, frame);
-                        TextFrameCount.Text = $"已提取：{extractCount} 帧";
+                        TextFrameCount.Text = $"已提取：{extractedCount} 帧";
                     }
                 }
                 else
                 {
                     Cv2.ImWrite(imgfile, frame);
-                    extractCount++;
-                    TextFrameCount.Text = $"已提取：{extractCount} 帧";
+                    extractedCount++;
+                    TextFrameCount.Text = $"已提取：{extractedCount} 帧";
                 }
-                index++;
 
-                if (CkbTotalFrame.Checked && extractCount >= totalFrame)
+                if (CkbTotalFrame.Checked && extractedCount >= totalFrameToExtrace)
                 {
                     break;
                 }
@@ -244,6 +264,19 @@ namespace VideoFrameExtract
                 cts.Cancel();
                 cts.Dispose();
                 cts = null;
+            }
+        }
+
+        private void CkbStartAtSecond_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CkbStartAtSecond.Checked)
+            {
+                TextStartAtSecond.Enabled = true;
+            }
+            else
+            {
+                TextStartAtSecond.Text = string.Empty;
+                TextStartAtSecond.Enabled = false;
             }
         }
     }
